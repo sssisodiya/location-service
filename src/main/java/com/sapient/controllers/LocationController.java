@@ -2,11 +2,13 @@ package com.sapient.controllers;
 
 import java.util.Date;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import com.sapient.models.Location;
 import com.sapient.repositories.LocationRepository;
@@ -23,10 +25,15 @@ public class LocationController {
 	}
 
 	@RequestMapping(method = RequestMethod.POST, value = "/locations")
+	@ResponseBody
 	public String save(@RequestBody Location location) {
+		
+		location.setCreatedDate(new Date());
+		location.setModifiedDate(new Date());
 
 		locationRepository.save(location);
-		return location.getId();
+		
+		return "{'id' : '"+location.getId()+"'}";
 	}
 
 	@RequestMapping(method = RequestMethod.GET, value = "locations/{id}")
@@ -39,6 +46,7 @@ public class LocationController {
 	public Location update(@PathVariable String id, @RequestBody Location location) {
 
 		Location loc = locationRepository.findOne(id);
+		loc.setModifiedDate(new Date());
 		if (loc.getCode() != null) {
 			loc.setCode(location.getCode());
 		}
@@ -53,10 +61,12 @@ public class LocationController {
 	}
 
 	@RequestMapping(method = RequestMethod.DELETE, value = "/locations/{id}")
+	@ResponseBody
 	public String delete(@PathVariable String id) {
 
 		locationRepository.delete(id);
-		return "delete location of id :" + id;
+		return "{'status' : 'OK'}";
+		
 	}
 
 }
