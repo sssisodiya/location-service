@@ -15,7 +15,7 @@ import com.sapient.repositories.LocationRepository;
 
 @RestController
 public class LocationController {
-
+    // to test i am updating something here ... 
 	@Autowired
 	LocationRepository locationRepository;
 
